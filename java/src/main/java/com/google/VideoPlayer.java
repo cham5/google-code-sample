@@ -237,6 +237,7 @@ public class VideoPlayer {
 
   public void searchVideos(String searchTerm) {
     List<Video> videoResults = new ArrayList<>();
+    Video specifiedVid = null;
 
     for(Video video : videoLibrary.getVideos()) {
       if(video.getTitle().toLowerCase().contains(searchTerm.toLowerCase())) {
@@ -244,7 +245,33 @@ public class VideoPlayer {
       }
     }
 
-    
+    if(videoResults.isEmpty()) {
+      System.out.println("No search results for " + searchTerm);
+      return;
+    }
+
+    System.out.println("Here are the results for " + searchTerm + ":");
+    int count = 0;
+    for(Video video : videoResults) {
+      count++;
+      System.out.println("\t" + count + ") " + video);
+    }
+
+    System.out.println("Would you like to play any of the above? If yes, specify the number of the video.\n" +
+            "If your answer is not a valid number, we will assume it's a no.");
+    Scanner scanner = new Scanner(System.in);
+    if(scanner.hasNextInt()) {
+      int specifiedNum = scanner.nextInt() - 1;
+      specifiedVid = videoResults.get(specifiedNum);
+    }
+
+    if(specifiedVid == null) {
+      System.out.println("Nope!");
+      return;
+    }
+
+    playVideo(specifiedVid.getVideoId());
+
   }
 
   public void searchVideosWithTag(String videoTag) {
